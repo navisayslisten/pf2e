@@ -275,11 +275,9 @@
                         "diceNumber": 1,
                         "dieSize": "d4",
                         "key": "DamageDice",
-                        "predicate": {
-                            "all": [
-                                "target:condition:prone"
-                            ]
-                        },
+                        "predicate": [
+                            "target:condition:prone"
+                        ],
                         "selector": "damage"
                     }
                 ],
@@ -373,12 +371,6 @@
         }
     ],
     "name": "Zombie Hound",
-    "prototypeToken": {
-        "name": "Zombie Hound",
-        "texture": {
-            "src": "systems/pf2e/icons/default-icons/npc.svg"
-        }
-    },
     "system": {
         "abilities": {
             "cha": {

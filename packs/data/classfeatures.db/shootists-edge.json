@@ -28,7 +28,7 @@
             {
                 "key": "ActiveEffectLike",
                 "mode": "upgrade",
-                "path": "system.attributes.classDC.rank",
+                "path": "system.proficiencies.classDCs.gunslinger.rank",
                 "value": 3
             },
             {
@@ -36,16 +36,14 @@
                 "key": "RollOption",
                 "option": "ignore-range-penalty:3",
                 "phase": "beforeRoll",
-                "predicate": {
-                    "all": [
-                        {
-                            "gte": [
-                                "weapon:proficiency:rank",
-                                3
-                            ]
-                        }
-                    ]
-                }
+                "predicate": [
+                    {
+                        "gte": [
+                            "weapon:proficiency:rank",
+                            3
+                        ]
+                    }
+                ]
             }
         ],
         "source": {

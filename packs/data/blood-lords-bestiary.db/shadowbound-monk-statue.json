@@ -164,21 +164,24 @@
                         "key": "RollOption",
                         "label": "PF2E.NPCAbility.ConstructArmor.CriticalHit",
                         "option": "construct-armor",
-                        "toggleable": true
+                        "toggleable": true,
+                        "value": false
                     },
                     {
                         "key": "FlatModifier",
-                        "predicate": {
-                            "any": [
-                                "construct-armor",
-                                {
-                                    "lt": [
-                                        "hp-percent",
-                                        50
-                                    ]
-                                }
-                            ]
-                        },
+                        "predicate": [
+                            {
+                                "or": [
+                                    "construct-armor",
+                                    {
+                                        "lt": [
+                                            "hp-percent",
+                                            50
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
                         "selector": "ac",
                         "value": -4
                     }
@@ -350,12 +353,6 @@
         }
     ],
     "name": "Shadowbound Monk Statue",
-    "prototypeToken": {
-        "name": "Shadowbound Monk Statue",
-        "texture": {
-            "src": "systems/pf2e/icons/default-icons/npc.svg"
-        }
-    },
     "system": {
         "abilities": {
             "cha": {

@@ -247,6 +247,13 @@ class TokenDocumentPF2e<TActor extends ActorPF2e = ActorPF2e> extends TokenDocum
             if (!this.actor.hasCondition("deafened")) {
                 this.detectionModes.push({ id: "hearing", enabled: true, range: Infinity });
             }
+
+            const tremorsense = this.actor.isOfType("character")
+                ? this.actor.system.traits.senses.find((s) => s.type === "tremorsense" && s.acuity !== "vague")
+                : null;
+            if (tremorsense) {
+                this.detectionModes.push({ id: "feelTremor", enabled: true, range: tremorsense.range });
+            }
         }
 
         const canSeeInvisibility =
@@ -280,7 +287,11 @@ class TokenDocumentPF2e<TActor extends ActorPF2e = ActorPF2e> extends TokenDocum
             token.height = size;
 
             if (game.settings.get("pf2e", "tokens.autoscale") && token.flags.pf2e.autoscale !== false) {
-                token.texture.scaleX = token.texture.scaleY = actor.size === "sm" ? 0.8 : 1;
+                const absoluteScale = actor.size === "sm" ? 0.8 : 1;
+                const mirrorX = token.texture.scaleX < 0 ? -1 : 1;
+                token.texture.scaleX = mirrorX * absoluteScale;
+                const mirrorY = token.texture.scaleY < 0 ? -1 : 1;
+                token.texture.scaleY = mirrorY * absoluteScale;
             }
         }
     }
@@ -351,18 +362,15 @@ class TokenDocumentPF2e<TActor extends ActorPF2e = ActorPF2e> extends TokenDocum
         }
 
         // Handle ephemeral changes from synthetic actor
-        if (this.actor && changed.actorData) {
-            super._onUpdate(changed, options, userId);
-            const preUpdate = this.toObject(false);
+        if (!this.actorLink && this.parent && changed.actorData) {
+            // If the Actor data override changed, simulate updating the synthetic Actor
+            this._onUpdateTokenActor(changed.actorData, options, userId);
             this.reset();
-            const postUpdate = this.toObject(false);
-            const ephemeralChanges = diffObject<DeepPartial<this["_source"]>>(preUpdate, postUpdate);
-            if (Object.keys(ephemeralChanges).length > 0) {
-                this.object?._onUpdate(ephemeralChanges, options, userId);
-            }
-        } else {
-            super._onUpdate(changed, options, userId);
+            changed.light = {} as foundry.data.LightSource;
+            delete changed.actorData; // Prevent upstream from doing so a second time
         }
+
+        return super._onUpdate(changed, options, userId);
     }
 
     /** Check area effects, removing any from this token's actor if the actor has no other tokens in the scene */
@@ -384,11 +392,22 @@ class TokenDocumentPF2e<TActor extends ActorPF2e = ActorPF2e> extends TokenDocum
     ): void {
         if (this.isLinked) {
             const preUpdate = this.toObject(false);
+            const preUpdateAuras = Array.from(this.auras.values()).map((a) => duplicate(a));
             this.reset();
             const postUpdate = this.toObject(false);
-            const changed = diffObject<DeepPartial<this["_source"]>>(preUpdate, postUpdate);
-            if (Object.keys(changed).length > 0) {
-                this._onUpdate(changed, options, game.user.id);
+            const postUpdateAuras = Array.from(this.auras.values()).map((a) => duplicate(a));
+            const changes = diffObject<DeepPartial<this["_source"]>>(preUpdate, postUpdate);
+            const auraChanges = mergeObject(
+                diffObject(preUpdateAuras, postUpdateAuras),
+                diffObject(postUpdateAuras, preUpdateAuras)
+            );
+
+            if (Object.keys(changes).length > 0) {
+                this._onUpdate(changes, options, game.user.id);
+            }
+
+            if (Object.keys(auraChanges).length > 0) {
+                this.scene?.checkAuras();
             }
         }
 

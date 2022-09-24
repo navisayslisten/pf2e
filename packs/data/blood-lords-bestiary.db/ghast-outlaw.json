@@ -53,12 +53,14 @@
                     {
                         "key": "FlatModifier",
                         "label": "Thieves' Tools (Pick Lock & Disable Devices)",
-                        "predicate": {
-                            "any": [
-                                "action:disable-device",
-                                "action:pick-a-lock"
-                            ]
-                        },
+                        "predicate": [
+                            {
+                                "or": [
+                                    "action:disable-device",
+                                    "action:pick-a-lock"
+                                ]
+                            }
+                        ],
                         "selector": "thievery",
                         "type": "item",
                         "value": 1
@@ -325,19 +327,27 @@
         {
             "_id": "4iW6J0hXOfo1k46A",
             "img": "systems/pf2e/icons/default-icons/melee.svg",
-            "name": "New Attack",
+            "name": "Claw",
             "sort": 500000,
             "system": {
                 "attack": {
                     "value": ""
                 },
                 "attackEffects": {
-                    "value": []
+                    "custom": "",
+                    "value": [
+                        "ghast-paralysis"
+                    ]
                 },
                 "bonus": {
-                    "value": 0
+                    "value": 21
                 },
-                "damageRolls": {},
+                "damageRolls": {
+                    "AP88M30cXCQhWpln": {
+                        "damage": "2d6+8",
+                        "damageType": "slashing"
+                    }
+                },
                 "description": {
                     "value": ""
                 },
@@ -349,7 +359,10 @@
                 "traits": {
                     "custom": "",
                     "rarity": "common",
-                    "value": []
+                    "value": [
+                        "agile",
+                        "finesse"
+                    ]
                 },
                 "weaponType": {
                     "value": "melee"
@@ -722,23 +735,23 @@
                         "diceNumber": 2,
                         "dieSize": "d6",
                         "key": "DamageDice",
-                        "predicate": {
-                            "all": [
-                                "target:condition:flat-footed"
-                            ],
-                            "any": [
-                                "weapon:trait:agile",
-                                "weapon:trait:finesse",
-                                {
-                                    "and": [
-                                        "weapon:ranged",
-                                        {
-                                            "not": "weapon:thrown-melee"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
+                        "predicate": [
+                            "target:condition:flat-footed",
+                            {
+                                "or": [
+                                    "weapon:trait:agile",
+                                    "weapon:trait:finesse",
+                                    {
+                                        "and": [
+                                            "weapon:ranged",
+                                            {
+                                                "not": "weapon:thrown-melee"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
                         "selector": "strike-damage"
                     }
                 ],
@@ -967,12 +980,6 @@
         }
     ],
     "name": "Ghast Outlaw",
-    "prototypeToken": {
-        "name": "Ghast Outlaw",
-        "texture": {
-            "src": "systems/pf2e/icons/default-icons/mystery-man.svg"
-        }
-    },
     "system": {
         "abilities": {
             "cha": {
@@ -1077,7 +1084,7 @@
             },
             "rarity": "uncommon",
             "senses": {
-                "value": ""
+                "value": "Darkvision"
             },
             "size": {
                 "value": "med"

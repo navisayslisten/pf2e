@@ -491,22 +491,42 @@
                 },
                 "rules": [
                     {
+                        "domain": "damage-roll",
+                        "key": "RollOption",
+                        "label": "PF2E.SpecificRule.PreciseStrike.Finisher",
+                        "option": "finisher",
+                        "toggleable": true
+                    },
+                    {
                         "damageCategory": "precision",
                         "key": "FlatModifier",
-                        "predicate": {
-                            "all": [
-                                "panache",
-                                "melee"
-                            ],
-                            "any": [
-                                "finesse",
-                                "agile"
-                            ],
-                            "not": [
-                                "finisher"
-                            ]
-                        },
+                        "predicate": [
+                            "class:swashbuckler",
+                            "self:effect:panache",
+                            {
+                                "or": [
+                                    "weapon:melee",
+                                    {
+                                        "and": [
+                                            "feat:flying-blade",
+                                            "weapon:thrown",
+                                            "target:range-increment:1"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "or": [
+                                    "weapon:trait:agile",
+                                    "weapon:trait:finesse"
+                                ]
+                            },
+                            {
+                                "not": "finisher"
+                            }
+                        ],
                         "selector": "strike-damage",
+                        "slug": "precise-strike",
                         "value": {
                             "brackets": [
                                 {
@@ -539,18 +559,31 @@
                         "category": "precision",
                         "dieSize": "d6",
                         "key": "DamageDice",
-                        "predicate": {
-                            "all": [
-                                "finisher",
-                                "panache",
-                                "melee"
-                            ],
-                            "any": [
-                                "finesse",
-                                "agile"
-                            ]
-                        },
+                        "predicate": [
+                            "class:swashbuckler",
+                            "self:effect:panache",
+                            "finisher",
+                            {
+                                "or": [
+                                    "weapon:melee",
+                                    {
+                                        "and": [
+                                            "feat:flying-blade",
+                                            "weapon:thrown",
+                                            "target:range-increment:1"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "or": [
+                                    "weapon:trait:agile",
+                                    "weapon:trait:finesse"
+                                ]
+                            }
+                        ],
                         "selector": "strike-damage",
+                        "slug": "finisher",
                         "value": {
                             "brackets": [
                                 {
@@ -588,13 +621,6 @@
                                 }
                             ]
                         }
-                    },
-                    {
-                        "domain": "damage-roll",
-                        "key": "RollOption",
-                        "label": "Finisher",
-                        "option": "finisher",
-                        "toggleable": true
                     }
                 ],
                 "slug": "precise-strike",
@@ -855,11 +881,9 @@
                 "rules": [
                     {
                         "key": "FlatModifier",
-                        "predicate": {
-                            "all": [
-                                "self:effect:panache"
-                            ]
-                        },
+                        "predicate": [
+                            "self:effect:panache"
+                        ],
                         "selector": "speed",
                         "slug": "vivacious-full",
                         "type": "status",
@@ -898,11 +922,11 @@
                     },
                     {
                         "key": "FlatModifier",
-                        "predicate": {
-                            "not": [
-                                "self:effect:panache"
-                            ]
-                        },
+                        "predicate": [
+                            {
+                                "not": "self:effect:panache"
+                            }
+                        ],
                         "selector": "speed",
                         "slug": "vivacious-half",
                         "type": "status",
@@ -1143,16 +1167,14 @@
                     },
                     {
                         "key": "CriticalSpecialization",
-                        "predicate": {
-                            "all": [
-                                {
-                                    "gte": [
-                                        "weapon:proficiency:rank",
-                                        2
-                                    ]
-                                }
-                            ]
-                        }
+                        "predicate": [
+                            {
+                                "gte": [
+                                    "weapon:proficiency:rank",
+                                    2
+                                ]
+                            }
+                        ]
                     }
                 ],
                 "slug": "weapon-expertise-swashbuckler",
@@ -1205,14 +1227,14 @@
                 "rules": [
                     {
                         "key": "FlatModifier",
-                        "predicate": {
-                            "all": [
-                                "panache"
-                            ],
-                            "any": [
-                                "action:demoralize"
-                            ]
-                        },
+                        "predicate": [
+                            "panache",
+                            {
+                                "or": [
+                                    "action:demoralize"
+                                ]
+                            }
+                        ],
                         "selector": "intimidation",
                         "type": "circumstance",
                         "value": 1
@@ -1726,11 +1748,9 @@
                 "rules": [
                     {
                         "key": "Note",
-                        "predicate": {
-                            "any": [
-                                "action:balance"
-                            ]
-                        },
+                        "predicate": [
+                            "action:balance"
+                        ],
                         "selector": "acrobatics",
                         "text": "If you roll a success using the Balance action, you get a critical success instead.",
                         "title": "{item|name}"
@@ -2235,11 +2255,9 @@
                 "rules": [
                     {
                         "key": "TokenLight",
-                        "predicate": {
-                            "all": [
-                                "lit-torch"
-                            ]
-                        },
+                        "predicate": [
+                            "lit-torch"
+                        ],
                         "value": {
                             "animation": {
                                 "intensity": 4,
@@ -2270,11 +2288,9 @@
                     {
                         "damageType": "fire",
                         "key": "FlatModifier",
-                        "predicate": {
-                            "all": [
-                                "lit-torch"
-                            ]
-                        },
+                        "predicate": [
+                            "lit-torch"
+                        ],
                         "selector": "{item|_id}-damage",
                         "value": 1
                     },
@@ -2287,11 +2303,9 @@
                     },
                     {
                         "key": "TokenEffectIcon",
-                        "predicate": {
-                            "all": [
-                                "lit-torch"
-                            ]
-                        },
+                        "predicate": [
+                            "lit-torch"
+                        ],
                         "value": "systems/pf2e/icons/equipment/held-items/everburning-torch.webp"
                     }
                 ],
@@ -3446,12 +3460,6 @@
         }
     ],
     "name": "Zathri",
-    "prototypeToken": {
-        "name": "Zathri",
-        "texture": {
-            "src": "systems/pf2e/icons/default-icons/character.svg"
-        }
-    },
     "system": {
         "abilities": {
             "cha": {

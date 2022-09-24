@@ -237,11 +237,9 @@
                 "rules": [
                     {
                         "key": "FlatModifier",
-                        "predicate": {
-                            "all": [
-                                "target:trait:undead"
-                            ]
-                        },
+                        "predicate": [
+                            "target:trait:undead"
+                        ],
                         "selector": "jaws-damage",
                         "type": "circumstance",
                         "value": 1
@@ -403,12 +401,6 @@
         }
     ],
     "name": "Bulette",
-    "prototypeToken": {
-        "name": "Bulette",
-        "texture": {
-            "src": "systems/pf2e/icons/default-icons/npc.svg"
-        }
-    },
     "system": {
         "abilities": {
             "cha": {
